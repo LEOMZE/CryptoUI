@@ -8,7 +8,6 @@ public class CastWrapper{
 
     private Cast_128 cast_128 = new Cast_128();
 
-
     public String decrypt(String msg, String key) {
         System.out.println(msg);
 
