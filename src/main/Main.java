@@ -8,6 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.Scanner;
 
@@ -26,11 +27,51 @@ public class Main extends Application{
 
     public static void main(String[] args) {
         //        launch(args);
-        String str = "Hello wolrd!";
-        String key = "peeepeeepeeeepee";
+        Scanner sc = new Scanner(System.in);
+        System.out.println("--------------------------------------------------------\n" +
+                "Welcome to cryptographic app created on CAST5 algorithm.\n" +
+                "--------------------------------------------------------");
         CastWrapper castWrapper = new CastWrapper();
-        String decrypt = castWrapper.decrypt(str, key);
-        castWrapper.encrypt(decrypt, key);
+        System.out.println(" 1 - decrypt\n 2 - encrypt \n 0 - Exit");
+        while (true){
+            switch (sc.nextLine()){
+                case ("0"):
+                    System.exit(0);
+                case ("1"):
+
+                    System.out.println("\n Please, write message that you want to decrypt:\n");
+                    String str = sc.nextLine();
+                    System.out.println("\n Please, write a key for decrypt (range of key should be [6 < key < 16] )");
+                    String key = sc.nextLine();
+                    if(key.getBytes().length > 5 || key.getBytes().length < 16){
+                        String decrypt = castWrapper.decrypt(str, key);
+                        System.out.println(decrypt);
+                    }else{
+                        System.out.println("Error: key range is incorrect.");
+                    }
+
+                    break;
+                case ("2"):
+
+                    System.out.println("\n Write decrypt msg\n");
+                    String encr = sc.nextLine();
+                    System.out.println("\n Write key\n");
+                    key = sc.nextLine();
+                    if(key.getBytes().length > 5 || key.getBytes().length < 16){
+                        String encrypt =  castWrapper.encrypt(encr, key);
+                        System.out.println(encrypt);
+                    }else{
+                        System.out.println("Error: key range is incorrect.");
+                    }
+
+                    break;
+                default:
+                    System.out.println("Incorrect input");
+                    break;
+            }
+        }
+
+
 
 
 

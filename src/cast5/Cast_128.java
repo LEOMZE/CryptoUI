@@ -1050,6 +1050,7 @@ public class Cast_128 {
 
     public byte[] encrypt(byte[] in, int i, byte[] out, int j, Object k, int bs)
     {
+
         if (bs != blockSize)
         {
             throw new IllegalArgumentException();
