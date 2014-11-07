@@ -1,76 +1,76 @@
 package main;
 
-import cast5.Cast_128;
-import com.sun.deploy.util.StringUtils;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
-import java.util.Scanner;
+import javafx.stage.Stage;
 
 public class Main extends Application{
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Hello World");
-        primaryStage.setWidth(630);
-        primaryStage.setHeight(430);
+
+        Parent root = FXMLLoader.load(getClass().getResource("/main/cryptoui.fxml"));
+        primaryStage.setTitle("CAST-128 CRYPTO APP v0.1");
+        primaryStage.setWidth(600);
+        primaryStage.setHeight(550);
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
+
     }
 
+
     public static void main(String[] args) {
-        //        launch(args);
-        Scanner sc = new Scanner(System.in);
-        System.out.println("--------------------------------------------------------\n" +
-                "Welcome to cryptographic app created on CAST5 algorithm.\n" +
-                "--------------------------------------------------------");
-        CastWrapper castWrapper = new CastWrapper();
-        System.out.println(" 1 - decrypt\n 2 - encrypt \n 0 - Exit");
-        while (true){
-            switch (sc.nextLine()){
-                case ("0"):
-                    System.exit(0);
-                case ("1"):
+                launch(args);
 
-                    System.out.println("\n Please, write message that you want to decrypt:\n");
-                    String str = sc.nextLine();
-                    System.out.println("\n Please, write a key for decrypt (range of key should be [6 < key < 16] )");
-                    String key = sc.nextLine();
-                    if(key.getBytes().length > 5 || key.getBytes().length < 16){
-                        String decrypt = castWrapper.decrypt(str, key);
-                        System.out.println(decrypt);
-                    }else{
-                        System.out.println("Error: key range is incorrect.");
-                    }
 
-                    break;
-                case ("2"):
-
-                    System.out.println("\n Write decrypt msg\n");
-                    String encr = sc.nextLine();
-                    System.out.println("\n Write key\n");
-                    key = sc.nextLine();
-                    if(key.getBytes().length > 5 || key.getBytes().length < 16){
-                        String encrypt =  castWrapper.encrypt(encr, key);
-                        System.out.println(encrypt);
-                    }else{
-                        System.out.println("Error: key range is incorrect.");
-                    }
-
-                    break;
-                default:
-                    System.out.println("Incorrect input");
-                    break;
-            }
-        }
-
+//        Scanner sc = new Scanner(System.in);
+//        System.out.println("--------------------------------------------------------\n" +
+//                "Welcome to cryptographic app created on CAST5 algorithm.\n" +
+//                "--------------------------------------------------------");
+//        CastWrapper castWrapper = new CastWrapper();
+//        System.out.println(" 1 - decrypt\n 2 - encrypt \n 0 - Exit");
+//        while (true){
+//            switch (sc.nextLine()){
+//                case ("0"):
+//                    System.exit(0);
+//                case ("1"):
+//
+//                    System.out.println("\n Please, write message that you want to decrypt:\n");
+//                    String str = sc.nextLine();
+//                    System.out.println("\n Please, write a key for decrypt (range of key should be [6 < key < 16] )");
+//                    String key = sc.nextLine();
+//                    if(key.getBytes().length > 5 || key.getBytes().length < 16){
+//                        String decrypt = castWrapper.decrypt(str, key);
+//                        System.out.println(decrypt);
+//                    }else{
+//                        System.out.println("Error: key range is incorrect.");
+//                    }
+//
+//                    break;
+//                case ("2"):
+//
+//                    System.out.println("\n Write decrypt msg\n");
+//                    String encr = sc.nextLine();
+//                    System.out.println("\n Write key\n");
+//                    key = sc.nextLine();
+//                    if(key.getBytes().length > 5 || key.getBytes().length < 16){
+//                        String encrypt =  castWrapper.encrypt(encr, key);
+//                        System.out.println(encrypt);
+//                    }else{
+//                        System.out.println("Error: key range is incorrect.");
+//                    }
+//
+//                    break;
+//                default:
+//                    System.out.println("Incorrect input");
+//                    break;
+//            }
+//        }
+//
 
 
 

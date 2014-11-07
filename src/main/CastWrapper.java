@@ -2,8 +2,10 @@ package main;
 
 import cast5.Cast_128;
 import java.io.*;
+import java.math.BigInteger;
 import java.security.InvalidKeyException;
 import java.util.Arrays;
+import javax.xml.bind.DatatypeConverter;
 
 public class CastWrapper{
 
@@ -36,20 +38,42 @@ public class CastWrapper{
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
+        System.out.println("Decrypt msg:\n" + stringBuffer.toString());
+        byte[] cryptArray = stringBuffer.toString().getBytes();
+        StringBuilder cryptBuilder = new StringBuilder();
+        cryptBuilder.append(toHex(cryptArray));
 
-        return stringBuffer.toString();
+        for(byte b : new BigInteger( cryptBuilder.toString(),16).toByteArray()){
+            System.out.print((b&0xff) + " ");
+        }
+
+        System.out.println(cryptBuilder.toString());
+        return cryptBuilder.toString();
 
     }
+
+    public static String toHex(byte [] buf) {
+        StringBuffer strbuf = new StringBuffer(buf.length * 2);
+        int i;
+        for (i = 0; i < buf.length; i++) {
+            if (((int) buf[i] & 0xff) < 0x10) {
+                strbuf.append("0");
+            }
+            strbuf.append(Long.toString((int) buf[i] & 0xff, 16));
+        }
+        return strbuf.toString();
+    }
+
 
     public String encrypt(String dMsg, String key){
         System.out.println(dMsg);
         byte[] out = new byte[8];
         byte[] part;
         String decryptMsg = "";
-        byte[] byteArray = new byte[dMsg.length()];
-        for(int i = 0; i < byteArray.length; i++){
-            byteArray[i] = (byte) dMsg.charAt(i);
-        }
+        byte[] byteArray = new BigInteger(dMsg,16).toByteArray();
+//        for(int i = 0; i < byteArray.length; i++){
+//            byteArray[i] = (byte) dMsg.charAt(i);
+//        }
 
         try {
             for(int i = 0; i < byteArray.length; i += 8){

@@ -1140,6 +1140,65 @@ public class Cast_128 {
         return out;
     }
 
+
+    public byte[] avalanche_effect(byte[] in, int i, byte[] out, int j, Object k, int bs)
+    {
+
+        ArrayList<Integer> d = new ArrayList<>();
+        if (bs != blockSize)
+        {
+            throw new IllegalArgumentException();
+        }
+        Cast5Key K = (Cast5Key) k;
+
+        int L = (in[i++] & 0xFF) << 24 | (in[i++] & 0xFF) << 16
+                | (in[i++] & 0xFF) << 8 | in[i++] & 0xFF;
+        int R = (in[i++] & 0xFF) << 24 | (in[i++] & 0xFF) << 16
+                | (in[i++] & 0xFF) << 8 | in[i] & 0xFF;
+
+        if (K.rounds == _16_ROUNDS)
+        {
+            L ^= f1(R, K.Km15, K.Kr15);
+            R ^= f3(L, K.Km14, K.Kr14);
+            L ^= f2(R, K.Km13, K.Kr13);
+            R ^= f1(L, K.Km12, K.Kr12);
+        }
+        L ^= f3(R, K.Km11, K.Kr11);
+        R ^= f2(L, K.Km10, K.Kr10);
+        L ^= f1(R, K.Km9, K.Kr9);
+        R ^= f3(L, K.Km8, K.Kr8);
+        L ^= f2(R, K.Km7, K.Kr7);
+        R ^= f1(L, K.Km6, K.Kr6);
+        L ^= f3(R, K.Km5, K.Kr5);
+        R ^= f2(L, K.Km4, K.Kr4);
+        L ^= f1(R, K.Km3, K.Kr3);
+        R ^= f3(L, K.Km2, K.Kr2);
+        L ^= f2(R, K.Km1, K.Kr1);
+        R ^= f1(L, K.Km0, K.Kr0);
+
+        return out;
+    }
+
+
+
+    private byte[] getRoundArray(int R, int L){
+
+        byte[] out = new byte[8];
+        int j = 0;
+
+        out[j++] = (byte) (R >>> 24);
+        out[j++] = (byte) (R >>> 16);
+        out[j++] = (byte) (R >>> 8);
+        out[j++] = (byte) R;
+        out[j++] = (byte) (L >>> 24);
+        out[j++] = (byte) (L >>> 16);
+        out[j++] = (byte) (L >>> 8);
+        out[j] = (byte) L;
+
+        return out;
+    }
+
+
     private final int f1(int I, int m, int r)
     {
         I = m + I;
