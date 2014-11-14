@@ -1141,10 +1141,10 @@ public class Cast_128 {
     }
 
 
-    public byte[] avalanche_effect(byte[] in, int i, byte[] out, int j, Object k, int bs)
+    public ArrayList<byte[]> avalanche_effect(byte[] in, int i, Object k, int bs)
     {
 
-        ArrayList<Integer> d = new ArrayList<>();
+        ArrayList<byte[]> d = new ArrayList<>();
         if (bs != blockSize)
         {
             throw new IllegalArgumentException();
@@ -1159,24 +1159,40 @@ public class Cast_128 {
         if (K.rounds == _16_ROUNDS)
         {
             L ^= f1(R, K.Km15, K.Kr15);
+            d.add(getRoundArray(R, L));
             R ^= f3(L, K.Km14, K.Kr14);
+            d.add(getRoundArray(R, L));
             L ^= f2(R, K.Km13, K.Kr13);
+            d.add(getRoundArray(R, L));
             R ^= f1(L, K.Km12, K.Kr12);
+            d.add(getRoundArray(R, L));
         }
         L ^= f3(R, K.Km11, K.Kr11);
+        d.add(getRoundArray(R, L));
         R ^= f2(L, K.Km10, K.Kr10);
+        d.add(getRoundArray(R, L));
         L ^= f1(R, K.Km9, K.Kr9);
+        d.add(getRoundArray(R, L));
         R ^= f3(L, K.Km8, K.Kr8);
+        d.add(getRoundArray(R, L));
         L ^= f2(R, K.Km7, K.Kr7);
+        d.add(getRoundArray(R, L));
         R ^= f1(L, K.Km6, K.Kr6);
+        d.add(getRoundArray(R, L));
         L ^= f3(R, K.Km5, K.Kr5);
+        d.add(getRoundArray(R, L));
         R ^= f2(L, K.Km4, K.Kr4);
+        d.add(getRoundArray(R, L));
         L ^= f1(R, K.Km3, K.Kr3);
+        d.add(getRoundArray(R, L));
         R ^= f3(L, K.Km2, K.Kr2);
+        d.add(getRoundArray(R, L));
         L ^= f2(R, K.Km1, K.Kr1);
+        d.add(getRoundArray(R, L));
         R ^= f1(L, K.Km0, K.Kr0);
+        d.add(getRoundArray(R, L));
 
-        return out;
+        return d;
     }
 
 

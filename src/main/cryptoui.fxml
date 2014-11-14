@@ -34,14 +34,14 @@
                               <Insets bottom="40.0" left="20.0" right="40.0" top="40.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextArea fx:id="decryptDText" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="20.0" right="100.0" top="30.0" />
-                           </GridPane.margin>
-                        </TextArea>
                         <TextArea fx:id="encryptDText" prefHeight="55.0" prefWidth="300.0" GridPane.columnSpan="2">
                            <GridPane.margin>
                               <Insets bottom="10.0" left="20.0" right="100.0" top="100.0" />
+                           </GridPane.margin>
+                        </TextArea>
+                        <TextArea fx:id="decryptDText" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="20.0" right="100.0" top="30.0" />
                            </GridPane.margin>
                         </TextArea>
                         <Label text="Decrypt text" GridPane.rowIndex="1" GridPane.valignment="TOP">
@@ -88,14 +88,14 @@
                               <Insets bottom="40.0" left="20.0" right="40.0" top="40.0" />
                            </GridPane.margin>
                         </TextField>
-                        <TextArea fx:id="encryptEText" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="10.0" left="20.0" right="100.0" top="30.0" />
-                           </GridPane.margin>
-                        </TextArea>
                         <TextArea fx:id="decryptEText" prefHeight="55.0" prefWidth="300.0" GridPane.columnSpan="2">
                            <GridPane.margin>
                               <Insets bottom="10.0" left="20.0" right="100.0" top="100.0" />
+                           </GridPane.margin>
+                        </TextArea>
+                        <TextArea fx:id="encryptEText" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets bottom="10.0" left="20.0" right="100.0" top="30.0" />
                            </GridPane.margin>
                         </TextArea>
                         <Label text="Encrypt text" GridPane.rowIndex="1" GridPane.valignment="TOP">
@@ -120,15 +120,11 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-                  <LineChart layoutX="19.0" layoutY="56.0" prefHeight="400.0" prefWidth="547.0">
-                    <xAxis>
-                      <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </LineChart>
-                  <Button layoutX="460.0" layoutY="456.0" mnemonicParsing="false" text="Build effect chart" />
+                   <LineChart fx:id="graph" layoutX="14.0" layoutY="14.0" prefHeight="434.0" prefWidth="575.0">
+                       <xAxis><NumberAxis label="Values for X-Axis" lowerBound="0" tickUnit="1" upperBound="10" /></xAxis>
+                       <yAxis><NumberAxis label="Values for Y-Axis" lowerBound="0" tickUnit="1" upperBound="1" /></yAxis>
+                   </LineChart>
+                  <Button fx:id="btnEffect" layoutX="460.0" layoutY="456.0" mnemonicParsing="false" onAction="#setBtnEffect" text="Build effect chart" />
                </children>
             </AnchorPane>
         </content>
