@@ -52,6 +52,17 @@ public class UIController implements Initializable {
     @FXML
     Button btnEffect;
 
+    @FXML
+    Button clearBtnD;
+
+    @FXML
+    Button clearBtnE;
+
+    @FXML
+    Button cte;
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,32 +78,33 @@ public class UIController implements Initializable {
     @FXML
     private void setBtnEffect(ActionEvent event){
 
-        ArrayList<Double> d = new ArrayList<>();
+        ArrayList<Integer> d = new ArrayList<>();
 
         ObservableList<XYChart.Series<Number, Number>> lineChartData = FXCollections.observableArrayList();
 
         LineChart.Series<Number, Number> series1 = new LineChart.Series<Number, Number>();
-        series1.setName("Series 1");
+        series1.setName("Avalanche Effect");
+
 
 
         if(encryptDText.getText().length() != 0 & keyDText.getText().length() != 0){
             d =  new CastWrapper().getAEffect(encryptDText.getText(), keyDText.getText());
-            for(int i=0; i<50; i++){
-                series1.getData().add(new XYChart.Data<Number, Number>(i, d.get(i).intValue()/30));
+            for(int i=0; i<d.size(); i++){
+                series1.getData().add(new XYChart.Data<Number, Number>(i, d.get(i).intValue()));
                 System.out.print(d.get(i).intValue() + " ");
             }
         }
 
 
-    lineChartData.add(series1);
+        lineChartData.add(series1);
 
-    graph.setData(lineChartData);
-    graph.createSymbolsProperty();
-}
+        graph.setData(lineChartData);
+        graph.createSymbolsProperty();
+    }
 
 
     @FXML
-    private void btnEncrypt(ActionEvent event){
+      private void btnEncrypt(ActionEvent event){
         String key = keyEText.getText();
         String text = decryptEText.getText();
 
@@ -102,6 +114,24 @@ public class UIController implements Initializable {
             System.out.println(decrText);
             encryptEText.setText(decrText);
         }
+    }
+
+    @FXML
+    private void clearAllDBtn(ActionEvent event){
+        encryptDText.setText("");
+        keyDText.setText("");
+    }
+
+    @FXML
+    private void clearAllEBtn(ActionEvent event){
+        decryptEText.setText("");
+        keyEText.setText("");
+    }
+
+    @FXML
+    private void copyBtn(ActionEvent event){
+        decryptEText.setText(decryptDText.getText());
+        keyEText.setText(keyDText.getText());
     }
 
     @FXML

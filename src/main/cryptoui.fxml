@@ -19,7 +19,7 @@
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </GridPane.margin>
                         </Label>
-                        <Button fx:id="decryptButton" mnemonicParsing="false" onAction="#btnDecrypt" text="Decrypt" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                        <Button fx:id="decryptButton" mnemonicParsing="false" onAction="#btnDecrypt" prefHeight="25.0" prefWidth="68.0" text="Decrypt" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
                            <GridPane.margin>
                               <Insets right="20.0" top="100.0" />
                            </GridPane.margin>
@@ -49,6 +49,11 @@
                               <Insets left="20.0" top="10.0" />
                            </GridPane.margin>
                         </Label>
+                        <Button fx:id="clearBtnD" mnemonicParsing="false" onAction="#clearAllDBtn" prefHeight="25.0" prefWidth="68.0" text="Clear All" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                           <GridPane.margin>
+                              <Insets right="20.0" top="35.0" />
+                           </GridPane.margin>
+                        </Button>
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -73,7 +78,7 @@
                               <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                            </GridPane.margin>
                         </Label>
-                        <Button fx:id="encryptButton" mnemonicParsing="false" onAction="#btnEncrypt" text="Encrypt" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                        <Button fx:id="encryptButton" mnemonicParsing="false" onAction="#btnEncrypt" prefHeight="25.0" prefWidth="67.0" text="Encrypt" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
                            <GridPane.margin>
                               <Insets right="20.0" top="100.0" />
                            </GridPane.margin>
@@ -103,6 +108,16 @@
                               <Insets left="20.0" top="10.0" />
                            </GridPane.margin>
                         </Label>
+                        <Button fx:id="clearBtnE" mnemonicParsing="false" onAction="#clearAllEBtn" prefHeight="25.0" prefWidth="66.0" text="Clear All" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                           <GridPane.margin>
+                              <Insets right="20.0" top="35.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <Button fx:id="cte" mnemonicParsing="false" onAction="#copyBtn" text="Copy Decrypt Text" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="TOP">
+                           <GridPane.margin>
+                              <Insets right="20.0" top="40.0" />
+                           </GridPane.margin>
+                        </Button>
                      </children>
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -121,8 +136,8 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
                    <LineChart fx:id="graph" layoutX="14.0" layoutY="14.0" prefHeight="434.0" prefWidth="575.0">
-                       <xAxis><NumberAxis label="Values for X-Axis" lowerBound="0" tickUnit="1" upperBound="10" /></xAxis>
-                       <yAxis><NumberAxis label="Values for Y-Axis" lowerBound="0" tickUnit="1" upperBound="1" /></yAxis>
+                       <xAxis><NumberAxis label="Количество раундов" lowerBound="0" tickUnit="1" upperBound="1" /></xAxis>
+                       <yAxis><NumberAxis label="Лавинный эффект" lowerBound="0" tickUnit="1" upperBound="100" /></yAxis>
                    </LineChart>
                   <Button fx:id="btnEffect" layoutX="460.0" layoutY="456.0" mnemonicParsing="false" onAction="#setBtnEffect" text="Build effect chart" />
                </children>

@@ -55,7 +55,7 @@ public class CastWrapper{
         }
         System.out.println("Decrypt msg:\n" + stringBuffer.toString());
 
-        return stringBuffer.toString();
+        return stringBuffer.toString().toUpperCase();
 
     }
 
@@ -113,11 +113,14 @@ public class CastWrapper{
         return out.toString();
     }
 
-    public ArrayList<Double> getAEffect(String msg, String key){
+    public ArrayList<Integer> getAEffect(String msg, String key){
         byte[] b = Arrays.copyOfRange(msg.getBytes(), 0, 8);
-        ArrayList<byte[]> arrayOrig = new ArrayList<>();
-        ArrayList<byte[]> arrayEx = new ArrayList<>();
-        ArrayList<Double> dots = new ArrayList<>();
+        System.out.println(new String(b));
+        ArrayList<byte[]> arrayOrig;
+        ArrayList<byte[]> arrayEx;
+        ArrayList<Integer> ddd = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> dots = new ArrayList<>();
+        ArrayList<Integer> dotsD = new ArrayList<>();
 
         try {
             arrayOrig =  cast_128.avalanche_effect(b, 0, cast_128.makeKey(key.getBytes(), 8), 8);
@@ -125,18 +128,27 @@ public class CastWrapper{
                 for(int j = 0; j < 7; j++){
                     for(int k = 0; k < 7; k++){
                         arrayEx = cast_128.avalanche_effect(changeElement(b, j, k), 0, cast_128.makeKey(key.getBytes(), 8), 8);
-                        dots.add(calculateAverage(returnD(arrayOrig, arrayEx)));
+                        dots.add(returnD(arrayOrig, arrayEx));
                     }
                 }
 
             }
+            for(int i = 0; i < dots.get(i).size(); i++ ){
+                int m = 0;
+                for(int l = 0; l < dots.size(); l++){
+                    m += dots.get(l).get(i);
+                }
+                ddd.add(m/dots.get(i).size());
+            }
+
+
 
 
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
 
-        return dots;
+        return ddd;
     }
 
     private Double calculateAverage(List<Integer> marks) {
@@ -155,7 +167,7 @@ public class CastWrapper{
         for(int i = 0; i < b.length; i++){
             if(i == byteIndex){
                 if((b[i] & (1 << index)) == 1){
-                     b[i] &=  1 << index;
+                    b[i] &=  1 << index;
                 }else{
                     b[i] |= 1 << index;
                 }
@@ -166,26 +178,32 @@ public class CastWrapper{
     }
 
     private ArrayList<Integer> returnD(ArrayList<byte[]> a, ArrayList<byte[]> b){
-        ArrayList<Integer> arrayD = new ArrayList<>();
+        ArrayList<Integer> arrayD = new ArrayList<>();//cравнение двух строк
 
-        String strA = new String();
-        String strB = new String();
+        String str = new String();
+        int d;
+        int s = 0;
+        int aByte;
+        int bByte;
 
 
         for(int i = 0; i < a.size(); i++){
-            for(byte index: a.get(i)){
-                strA += Integer.toBinaryString(index);
+            for(int j = 0; j < a.get(i).length; j++){
+                aByte = a.get(i)[j] & 0xff;
+                bByte = b.get(i)[j] & 0xff;
+                str += Integer.toBinaryString(aByte ^ bByte);
+                s = a.get(i)[j] ^ b.get(i)[j];
             }
-            for(byte index: b.get(i)){
-                strB += Integer.toBinaryString(index);
-            }
-
-            arrayD.add(Math.abs(strA.split("0").length - strB.split("0").length));
+            d = str.replace("0", "").length();
+            arrayD.add(d);
+            str = new String();
         }
 
         return arrayD;
+
     }
-
-
-
 }
+
+
+
+
