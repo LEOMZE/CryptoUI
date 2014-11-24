@@ -1,0 +1,9 @@
+.thick-chart .chart-series-line {
+    -fx-stroke-width: 2px;
+}
+
+.default-color0.chart-series-line { -fx-stroke: #686fe9; }
+.default-color1.chart-series-line { -fx-stroke: #ad2eac; }
+
+.default-color0.chart-line-symbol { -fx-background-color: #686fe9, white; }
+.default-color1.chart-line-symbol { -fx-background-color: #ad2eac, white; }

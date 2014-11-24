@@ -16,6 +16,7 @@ public class Main extends Application{
         primaryStage.setWidth(600);
         primaryStage.setHeight(550);
         primaryStage.setResizable(false);
+        root.getStylesheets().add("\\main\\chart_style.css");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
 

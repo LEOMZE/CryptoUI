@@ -47,7 +47,7 @@ public class UIController implements Initializable {
     private TextField keyEText;
 
     @FXML
-    LineChart<Number, Number> graph;
+    LineChart<Number, Double> graph;
 
     @FXML
     Button btnEffect;
@@ -72,31 +72,42 @@ public class UIController implements Initializable {
         encryptEText.setWrapText(true);
         decryptDText.setWrapText(true);
         decryptEText.setWrapText(true);
+        graph.getStyleClass().add("thick-chart");
+        graph.setCreateSymbols(false);
 
     }
 
     @FXML
     private void setBtnEffect(ActionEvent event){
 
-        ArrayList<Integer> d = new ArrayList<>();
+        ArrayList<Integer> arrayMsg = new ArrayList<>();
+        ArrayList<Integer> arrayKey = new ArrayList<>();
 
-        ObservableList<XYChart.Series<Number, Number>> lineChartData = FXCollections.observableArrayList();
+        ObservableList<XYChart.Series<Number, Double>> lineChartData = FXCollections.observableArrayList();
 
-        LineChart.Series<Number, Number> series1 = new LineChart.Series<Number, Number>();
-        series1.setName("Avalanche Effect");
+        LineChart.Series<Number, Double> series1 = new LineChart.Series<Number, Double>();
+        LineChart.Series<Number, Double> series2 = new LineChart.Series<Number, Double>();
+        series1.setName("Avalanche Effect of Message");
+        series2.setName("Avalanche Effect of Key");
 
 
 
         if(encryptDText.getText().length() != 0 & keyDText.getText().length() != 0){
-            d =  new CastWrapper().getAEffect(encryptDText.getText(), keyDText.getText());
-            for(int i=0; i<d.size(); i++){
-                series1.getData().add(new XYChart.Data<Number, Number>(i, d.get(i).intValue()));
-                System.out.print(d.get(i).intValue() + " ");
+            arrayMsg =  new CastWrapper().getAEffectMsg(encryptDText.getText(), keyDText.getText());
+            arrayKey = new CastWrapper().getAEffectKey(encryptDText.getText(), keyDText.getText());
+            for(int i=0; i<arrayMsg.size(); i++){
+                series1.getData().add(new XYChart.Data<Number, Double>(i, (double) arrayMsg.get(i).intValue()/64));
+                System.out.print(arrayMsg.get(i).intValue() + " ");
+            }
+            for(int i = 0; i < arrayKey.size(); i++){
+                series2.getData().add(new XYChart.Data<Number,Double>(i,(double) arrayKey.get(i).intValue()/64));
+                System.out.print(arrayKey.get(i).intValue() + " ");
             }
         }
 
 
         lineChartData.add(series1);
+        lineChartData.add(series2);
 
         graph.setData(lineChartData);
         graph.createSymbolsProperty();

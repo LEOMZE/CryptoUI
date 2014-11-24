@@ -6,7 +6,6 @@ import javax.xml.bind.DatatypeConverter;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class CastWrapper{
 
@@ -113,14 +112,53 @@ public class CastWrapper{
         return out.toString();
     }
 
-    public ArrayList<Integer> getAEffect(String msg, String key){
+    public ArrayList<Integer> getAEffectKey(String msg, String key){
         byte[] b = Arrays.copyOfRange(msg.getBytes(), 0, 8);
         System.out.println(new String(b));
         ArrayList<byte[]> arrayOrig;
         ArrayList<byte[]> arrayEx;
         ArrayList<Integer> ddd = new ArrayList<>();
         ArrayList<ArrayList<Integer>> dots = new ArrayList<>();
-        ArrayList<Integer> dotsD = new ArrayList<>();
+
+        try {
+            arrayOrig =  cast_128.avalanche_effect(b, 0, cast_128.makeKey(key.getBytes(), 8), 8);
+            for(int i = 0; i < arrayOrig.size(); i++){
+                for(int j = 0; j < key.getBytes().length; j++){
+                    for(int k = 0; k < 7; k++){
+                        arrayEx = cast_128.avalanche_effect(b, 0, cast_128.makeKey(changeElement(key.getBytes(), j, k), 8), 8);
+                        dots.add(returnD(arrayOrig, arrayEx));
+                    }
+                }
+
+            }
+            for(int i = 0; i < dots.get(i).size(); i++ ){
+                int m = 0;
+                for(int l = 0; l < dots.size(); l++){
+                    m += dots.get(l).get(i);
+                }
+
+                int r1 = dots.size();
+                int r2 = dots.get(i).size();
+                ddd.add(m / dots.size());
+            }
+
+
+
+
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        }
+
+        return ddd;
+    }
+
+    public ArrayList<Integer> getAEffectMsg(String msg, String key){
+        byte[] b = Arrays.copyOfRange(msg.getBytes(), 0, 8);
+        System.out.println(new String(b));
+        ArrayList<byte[]> arrayOrig;
+        ArrayList<byte[]> arrayEx;
+        ArrayList<Integer> ddd = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> dots = new ArrayList<>();
 
         try {
             arrayOrig =  cast_128.avalanche_effect(b, 0, cast_128.makeKey(key.getBytes(), 8), 8);
@@ -138,7 +176,10 @@ public class CastWrapper{
                 for(int l = 0; l < dots.size(); l++){
                     m += dots.get(l).get(i);
                 }
-                ddd.add(m/dots.get(i).size());
+
+                int r1 = dots.size();
+                int r2 = dots.get(i).size();
+                ddd.add(m / dots.size());
             }
 
 
@@ -151,16 +192,6 @@ public class CastWrapper{
         return ddd;
     }
 
-    private Double calculateAverage(List<Integer> marks) {
-        Double sum = 0.0;
-        if(!marks.isEmpty()) {
-            for (Integer mark : marks) {
-                sum += mark;
-            }
-            return sum.doubleValue() / marks.size();
-        }
-        return sum;
-    }
 
     private byte[] changeElement(byte[] b, int index, int byteIndex){
 
