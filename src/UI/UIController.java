@@ -13,7 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
-import main.CastWrapper;
+import cast5.CastWrapper;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -92,15 +92,16 @@ public class UIController implements Initializable {
 
 
 
-        if(encryptDText.getText().length() != 0 & keyDText.getText().length() != 0){
-            arrayMsg =  new CastWrapper().getAEffectMsg(encryptDText.getText(), keyDText.getText());
-            arrayKey = new CastWrapper().getAEffectKey(encryptDText.getText(), keyDText.getText());
+        if(decryptEText.getText().length() != 0 & keyEText.getText().length() != 0){
+            arrayMsg =  new CastWrapper().getAEffectMsg(decryptEText.getText(), keyEText.getText());
+            arrayKey = new CastWrapper().getAEffectKey(decryptEText.getText(), keyEText.getText());
             for(int i=0; i<arrayMsg.size(); i++){
-                series1.getData().add(new XYChart.Data<Number, Double>(i, (double) arrayMsg.get(i).intValue()/64));
+                series1.getData().add(new XYChart.Data<Number, Double>(i, (double) arrayMsg.get(i).intValue() / 64));
                 System.out.print(arrayMsg.get(i).intValue() + " ");
             }
+            int d = keyEText.getText().toString().getBytes().length * 8;
             for(int i = 0; i < arrayKey.size(); i++){
-                series2.getData().add(new XYChart.Data<Number,Double>(i,(double) arrayKey.get(i).intValue()/64));
+                series2.getData().add(new XYChart.Data<Number,Double>(i,(double) arrayKey.get(i).intValue() / 64));
                 System.out.print(arrayKey.get(i).intValue() + " ");
             }
         }
@@ -128,6 +129,19 @@ public class UIController implements Initializable {
     }
 
     @FXML
+    private void btnDecrypt(ActionEvent event){
+        String key = keyDText.getText();
+        String text = encryptDText.getText();
+
+        if(key.length() != 0 && text.length() != 0){
+            CastWrapper castWrapper = new CastWrapper();
+            String encrText = castWrapper.decrypt(text, key);
+            System.out.println(encrText);
+            decryptDText.setText(encrText);
+        }
+    }
+
+    @FXML
     private void clearAllDBtn(ActionEvent event){
         encryptDText.setText("");
         keyDText.setText("");
@@ -141,25 +155,9 @@ public class UIController implements Initializable {
 
     @FXML
     private void copyBtn(ActionEvent event){
-        decryptEText.setText(decryptDText.getText());
-        keyEText.setText(keyDText.getText());
+        encryptDText.setText(encryptEText.getText());
+        keyDText.setText(keyEText.getText());
     }
-
-    @FXML
-    private void btnDecrypt(ActionEvent event){
-        String key = keyDText.getText();
-        String text = encryptDText.getText();
-
-        if(key.length() != 0 && text.length() != 0){
-            CastWrapper castWrapper = new CastWrapper();
-            String encrText = castWrapper.decrypt(text, key);
-            System.out.println(encrText);
-            decryptDText.setText(encrText);
-        }
-    }
-
-
-
 
     public EventHandler letter_Validation(final Integer max_Lengh) {
         return new EventHandler() {

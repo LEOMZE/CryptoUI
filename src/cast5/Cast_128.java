@@ -3,17 +3,10 @@ package cast5;
 
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
 public class Cast_128 {
 
     private final static byte blockSize = 8;
-    private final static byte keySize = 5;
-    private static final byte[] KAT_KEY = ("0123456712").getBytes();/*Util.toBytesFromString*/
-    private static final byte[] KAT_PT = ("0123456789ABCDEF").getBytes();/*Util.toBytesFromString*/
-    private static final byte[] KAT_CT =("7AC816D16E9B302E").getBytes(); /*Util.toBytesFromString*/
-    private static Boolean valid;
 
     private static final int[] S1 = { 0x30FB40D4, 0x9FA0FF0B, 0x6BECCD2F,
             0x3F258C7A, 0x1E213F2F, 0x9C004DD3,
@@ -719,24 +712,6 @@ public class Cast_128 {
         return new int[] { x >>> 24, (x >>> 16) & 0xFF, (x >>> 8) & 0xFF, x & 0xFF };
     }
 
-    public Iterator blockSizes()
-    {
-        ArrayList al = new ArrayList();
-        al.add(new Integer(blockSize));
-
-        return Collections.unmodifiableList(al).iterator();
-    }
-
-    public Iterator keySizes()
-    {
-        ArrayList al = new ArrayList();
-        for (int n = 5; n < 17; n++)
-        {
-            al.add(new Integer(n));
-        }
-
-        return Collections.unmodifiableList(al).iterator();
-    }
 
     public Object makeKey(byte[] uk, int bs) throws InvalidKeyException {
 
@@ -746,9 +721,7 @@ public class Cast_128 {
         }
         if (uk == null)
         {
-
                 throw new InvalidKeyException("Empty key");
-
         }
         int len = uk.length;
         if (len < 5 || len > 16)
@@ -1140,7 +1113,6 @@ public class Cast_128 {
         return out;
     }
 
-
     public ArrayList<byte[]> avalanche_effect(byte[] in, int i, Object k, int bs)
     {
 
@@ -1156,46 +1128,44 @@ public class Cast_128 {
         int R = (in[i++] & 0xFF) << 24 | (in[i++] & 0xFF) << 16
                 | (in[i++] & 0xFF) << 8 | in[i] & 0xFF;
 
+        L ^= f1(R, K.Km0, K.Kr0);
+        d.add(getRoundArray(R, L));
+        R ^= f2(L, K.Km1, K.Kr1); // round 2
+        d.add(getRoundArray(R, L));
+        L ^= f3(R, K.Km2, K.Kr2);
+        d.add(getRoundArray(R, L));
+        R ^= f1(L, K.Km3, K.Kr3); // round 4
+        d.add(getRoundArray(R, L));
+        L ^= f2(R, K.Km4, K.Kr4);
+        d.add(getRoundArray(R, L));
+        R ^= f3(L, K.Km5, K.Kr5); // round 6
+        d.add(getRoundArray(R, L));
+        L ^= f1(R, K.Km6, K.Kr6);
+        d.add(getRoundArray(R, L));
+        R ^= f2(L, K.Km7, K.Kr7); // round 8
+        d.add(getRoundArray(R, L));
+        L ^= f3(R, K.Km8, K.Kr8);
+        d.add(getRoundArray(R, L));
+        R ^= f1(L, K.Km9, K.Kr9); // round 10
+        d.add(getRoundArray(R, L));
+        L ^= f2(R, K.Km10, K.Kr10);
+        d.add(getRoundArray(R, L));
+        R ^= f3(L, K.Km11, K.Kr11); // round 12
+        d.add(getRoundArray(R, L));
         if (K.rounds == _16_ROUNDS)
         {
-            L ^= f1(R, K.Km15, K.Kr15);
+            L ^= f1(R, K.Km12, K.Kr12);
             d.add(getRoundArray(R, L));
-            R ^= f3(L, K.Km14, K.Kr14);
+            R ^= f2(L, K.Km13, K.Kr13); // round 14
             d.add(getRoundArray(R, L));
-            L ^= f2(R, K.Km13, K.Kr13);
+            L ^= f3(R, K.Km14, K.Kr14);
             d.add(getRoundArray(R, L));
-            R ^= f1(L, K.Km12, K.Kr12);
+            R ^= f1(L, K.Km15, K.Kr15); // round 16
             d.add(getRoundArray(R, L));
         }
-        L ^= f3(R, K.Km11, K.Kr11);
-        d.add(getRoundArray(R, L));
-        R ^= f2(L, K.Km10, K.Kr10);
-        d.add(getRoundArray(R, L));
-        L ^= f1(R, K.Km9, K.Kr9);
-        d.add(getRoundArray(R, L));
-        R ^= f3(L, K.Km8, K.Kr8);
-        d.add(getRoundArray(R, L));
-        L ^= f2(R, K.Km7, K.Kr7);
-        d.add(getRoundArray(R, L));
-        R ^= f1(L, K.Km6, K.Kr6);
-        d.add(getRoundArray(R, L));
-        L ^= f3(R, K.Km5, K.Kr5);
-        d.add(getRoundArray(R, L));
-        R ^= f2(L, K.Km4, K.Kr4);
-        d.add(getRoundArray(R, L));
-        L ^= f1(R, K.Km3, K.Kr3);
-        d.add(getRoundArray(R, L));
-        R ^= f3(L, K.Km2, K.Kr2);
-        d.add(getRoundArray(R, L));
-        L ^= f2(R, K.Km1, K.Kr1);
-        d.add(getRoundArray(R, L));
-        R ^= f1(L, K.Km0, K.Kr0);
-        d.add(getRoundArray(R, L));
 
         return d;
     }
-
-
 
     private byte[] getRoundArray(int R, int L){
 
@@ -1213,7 +1183,6 @@ public class Cast_128 {
 
         return out;
     }
-
 
     private final int f1(int I, int m, int r)
     {

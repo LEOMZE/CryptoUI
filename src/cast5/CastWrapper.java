@@ -1,4 +1,4 @@
-package main;
+package cast5;
 
 import cast5.Cast_128;
 
@@ -12,15 +12,41 @@ public class CastWrapper{
     private Cast_128 cast_128 = new Cast_128();
 
     public String decrypt(String msg, String key) {
-        System.out.println(" MSG: \n" + msg);
-        for(byte b: msg.getBytes()){
-            System.out.print(Integer.toHexString(b&0xff) + " ");
+
+        ArrayList<Byte> ar = new ArrayList<>();
+        byte[] out = new byte[8];
+        byte[] part;
+        String decryptMsg;
+        byte[] byteArray = toByteArray(msg.replace(" ", ""));
+
+
+        try {
+            for(int i = 0; i < byteArray.length; i += 8){
+                part = Arrays.copyOfRange(byteArray, i, i + 8);
+                for(byte b : cast_128.decrypt(part, 0, out, 0, cast_128.makeKey(key.getBytes(), 8), 8) ){
+                    ar.add(b);
+                }
+            }
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
         }
+
+        byte[] data = new byte[ar.size()];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = ar.get(i);
+        }
+        decryptMsg = new String(data);
+        return decryptMsg;
+    }
+
+    private static byte[] toByteArray(String s) {
+        return DatatypeConverter.parseHexBinary(s);
+    }
+
+    public String encrypt(String msg, String key){
 
         byte[] out = new byte[8];
         byte[] part;
-        ArrayList<Byte> ar = new ArrayList<>();
-
         StringBuilder stringBuffer = new StringBuilder();
         byte[] msgArray = msg.getBytes();
 
@@ -35,72 +61,19 @@ public class CastWrapper{
                     part = Arrays.copyOfRange(msgArray, i, i + 8);
                 }
 
-                out = cast_128.decrypt(part, 0, out, 0, cast_128.makeKey(key.getBytes(), 8), 8);
+                out = cast_128.encrypt(part, 0, out, 0, cast_128.makeKey(key.getBytes(), 8), 8);
                 for(byte b: out){
                     if (((int) b & 0xff) < 0x10) {
 
                         stringBuffer.append("0");
                     }
-                    ar.add(b);
                     stringBuffer.append(Integer.toHexString(b&0xff) + " ");
                 }
             }
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
-        System.out.print(" to decr ar: \n");
-        for(byte b : ar){
-            System.out.print(Integer.toHexString(b & 0xff) + " ");
-        }
-        System.out.println("Decrypt msg:\n" + stringBuffer.toString());
-
         return stringBuffer.toString().toUpperCase();
-
-    }
-
-    private static byte[] toByteArray(String s) {
-        return DatatypeConverter.parseHexBinary(s);
-    }
-
-    public String encrypt(String dMsg, String key){
-        ArrayList<Byte> ar = new ArrayList<>();
-        System.out.println("Dcr msg: \n" + dMsg);
-        byte[] out = new byte[8];
-        byte[] part;
-        String decryptMsg = "";
-        System.out.println("without space:\n " + dMsg.replace(" ", ""));
-        byte[] byteArray = toByteArray(dMsg.replace(" ", ""));
-        System.out.print(" In arr: \n");
-        for(byte b : byteArray){
-            System.out.print(Integer.toHexString(b&0xff) + " ");
-        }
-        System.out.println();
-
-        try {
-            for(int i = 0; i < byteArray.length; i += 8){
-                part = Arrays.copyOfRange(byteArray, i, i + 8);
-//                decryptMsg += new String(cast_128.encrypt(part, 0, out, 0, cast_128.makeKey(key.getBytes(), 8), 8) /*"cp1251"*/);
-                for(byte b : cast_128.encrypt(part, 0, out, 0, cast_128.makeKey(key.getBytes(), 8), 8) ){
-                    ar.add(b);
-                }
-            }
-//            System.out.println(decryptMsg);
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        }
-
-        byte[] data = new byte[ar.size()];
-        for (int i = 0; i < data.length; i++) {
-            data[i] = (byte) ar.get(i);
-        }
-        decryptMsg = new String(data);
-
-        System.out.println("decr msg to arr: \n");
-        for(byte b: ar){
-            System.out.print(Integer.toHexString(b & 0xff) + " ");
-        }
-        System.out.println();
-        return decryptMsg;
 
     }
 
@@ -114,18 +87,18 @@ public class CastWrapper{
 
     public ArrayList<Integer> getAEffectKey(String msg, String key){
         byte[] b = Arrays.copyOfRange(msg.getBytes(), 0, 8);
-        System.out.println(new String(b));
+        byte[] keyArray = Arrays.copyOfRange(key.getBytes(), 0, 8);
         ArrayList<byte[]> arrayOrig;
         ArrayList<byte[]> arrayEx;
         ArrayList<Integer> ddd = new ArrayList<>();
         ArrayList<ArrayList<Integer>> dots = new ArrayList<>();
 
         try {
-            arrayOrig =  cast_128.avalanche_effect(b, 0, cast_128.makeKey(key.getBytes(), 8), 8);
+            arrayOrig =  cast_128.avalanche_effect(b, 0, cast_128.makeKey(keyArray, 8), 8);
             for(int i = 0; i < arrayOrig.size(); i++){
-                for(int j = 0; j < key.getBytes().length; j++){
+                for(int j = 0; j < 7/*key.getBytes().length*/; j++){
                     for(int k = 0; k < 7; k++){
-                        arrayEx = cast_128.avalanche_effect(b, 0, cast_128.makeKey(changeElement(key.getBytes(), j, k), 8), 8);
+                        arrayEx = cast_128.avalanche_effect(b, 0, cast_128.makeKey(changeElement(keyArray, j, k), 8), 8);
                         dots.add(returnD(arrayOrig, arrayEx));
                     }
                 }
@@ -137,14 +110,8 @@ public class CastWrapper{
                     m += dots.get(l).get(i);
                 }
 
-                int r1 = dots.size();
-                int r2 = dots.get(i).size();
-                ddd.add(m / dots.size());
+                ddd.add( m / dots.size() );
             }
-
-
-
-
         } catch (InvalidKeyException e) {
             e.printStackTrace();
         }
@@ -154,18 +121,18 @@ public class CastWrapper{
 
     public ArrayList<Integer> getAEffectMsg(String msg, String key){
         byte[] b = Arrays.copyOfRange(msg.getBytes(), 0, 8);
-        System.out.println(new String(b));
+        byte[] keyArray = Arrays.copyOfRange(key.getBytes(), 0, 8);
         ArrayList<byte[]> arrayOrig;
         ArrayList<byte[]> arrayEx;
         ArrayList<Integer> ddd = new ArrayList<>();
         ArrayList<ArrayList<Integer>> dots = new ArrayList<>();
 
         try {
-            arrayOrig =  cast_128.avalanche_effect(b, 0, cast_128.makeKey(key.getBytes(), 8), 8);
+            arrayOrig =  cast_128.avalanche_effect(b, 0, cast_128.makeKey(keyArray, 8), 8);
             for(int i = 0; i < arrayOrig.size(); i++){
                 for(int j = 0; j < 7; j++){
                     for(int k = 0; k < 7; k++){
-                        arrayEx = cast_128.avalanche_effect(changeElement(b, j, k), 0, cast_128.makeKey(key.getBytes(), 8), 8);
+                        arrayEx = cast_128.avalanche_effect(changeElement(b, j, k), 0, cast_128.makeKey(keyArray, 8), 8);
                         dots.add(returnD(arrayOrig, arrayEx));
                     }
                 }
@@ -177,13 +144,8 @@ public class CastWrapper{
                     m += dots.get(l).get(i);
                 }
 
-                int r1 = dots.size();
-                int r2 = dots.get(i).size();
                 ddd.add(m / dots.size());
             }
-
-
-
 
         } catch (InvalidKeyException e) {
             e.printStackTrace();
@@ -191,7 +153,6 @@ public class CastWrapper{
 
         return ddd;
     }
-
 
     private byte[] changeElement(byte[] b, int index, int byteIndex){
 
@@ -209,21 +170,18 @@ public class CastWrapper{
     }
 
     private ArrayList<Integer> returnD(ArrayList<byte[]> a, ArrayList<byte[]> b){
-        ArrayList<Integer> arrayD = new ArrayList<>();//cравнение двух строк
+        ArrayList<Integer> arrayD = new ArrayList<>();
 
         String str = new String();
         int d;
-        int s = 0;
         int aByte;
         int bByte;
-
 
         for(int i = 0; i < a.size(); i++){
             for(int j = 0; j < a.get(i).length; j++){
                 aByte = a.get(i)[j] & 0xff;
                 bByte = b.get(i)[j] & 0xff;
                 str += Integer.toBinaryString(aByte ^ bByte);
-                s = a.get(i)[j] ^ b.get(i)[j];
             }
             d = str.replace("0", "").length();
             arrayD.add(d);
